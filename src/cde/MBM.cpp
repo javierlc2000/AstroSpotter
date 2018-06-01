@@ -1,5 +1,5 @@
-#include "..\lib\Image.h"
-#include "..\lib\Object.h"
+#include "lib/Image.h"
+#include "lib/Object.h"
 #include <bits/stdc++.h>
 using namespace std;
 
