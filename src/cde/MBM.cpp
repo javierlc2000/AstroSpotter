@@ -1,5 +1,5 @@
-#include "C:\Users\gonzalez\Desktop\Investigacio\AstroSpotter\src\lib\Image.h"
-#include "C:\Users\gonzalez\Desktop\Investigacio\AstroSpotter\src\lib\Object.h"
+#include "lib/Image.h"
+#include "lib/Object.h"
 #include <bits/stdc++.h>
 using namespace std;
 
