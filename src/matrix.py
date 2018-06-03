@@ -3,6 +3,7 @@ import click
 import numpy
 from PIL import Image
 
+
 @click.group()
 def main():
     """
@@ -15,15 +16,14 @@ def main():
 @click.argument('input', type=click.File('r'))
 def extract(input):
     count, width, height, *values = map(int, input.read().split())
+    assert max(values) <= 0xff and len(values) == count * (width * height)
+
     matrices = numpy.array_split(values, count)
-
-    assert len(values) == count * (width * height)
-    assert max(values) <= 0xff  # 255
-
     for number, matrix in enumerate(matrices, 1):
         matrix.shape = [width, height]  # Convert to 2D matrix
-        matrix = numpy.flip(matrix, 0)  # Mirror along the X axis
-        Image.fromarray(matrix.astype('uint8'), mode='L').save(f"{number}.bmp")
+        matrix = numpy.flip(matrix, 0)  # FIXME: only for compatibility
+        image = Image.fromarray(matrix.astype('uint8'), mode='L')  # 8 bit gray
+        image.save(f"{number}.bmp")
 
 
 @main.command('create', help="Create matrices.txt from individual image files.")
@@ -31,6 +31,7 @@ def extract(input):
 @click.option('--output', required=True, type=click.File('w'))
 @click.argument('input', nargs=-1, type=click.File('rb'))
 def create(input, output, noise=False):
+    noise_maximum = 150
     dimensions = list()
     matrices = list()
 
@@ -39,10 +40,10 @@ def create(input, output, noise=False):
         dimensions += [image.size]
 
         if noise:
-            random = numpy.random.randint(0, 150, size=image.shape)
+            random = numpy.random.randint(0, noise_maximum, size=image.shape)
             numpy.clip(image + random, 0, 0xff, out=image)
 
-        image = numpy.flip(image, 0)
+        image = numpy.flip(image, 0)  # FIXME: only for compatibility
         matrices += [image.flatten()]
 
     assert all([dimension == dimensions[0] for dimension in dimensions])
