@@ -5,10 +5,8 @@ from PIL import Image
 
 @click.group()
 def main():
-    # TODO: make it compatible with BMP and PNG by using PIL or Pillow
     """
     Convert between matrices.txt and BMP file formats.
-    Replaces more than 344 lines of C++ code.
     """
     pass
 
